@@ -2,17 +2,28 @@
 
 PINN-based model training and MPC experiment notebooks.
 
+## Current Notebooks
+
+The latest working notebooks are kept here so they are easy to find first:
+
+- Training: `notebooks/current/training/PINN_model_training_auto_v6_alpha_state.ipynb`
+- MPC: `notebooks/current/mpc/PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI.ipynb`
+
 ## Repository Structure
 
 ```text
 PINN_MPC/
 ├── notebooks/
-│   ├── training/
-│   │   ├── PINN_model_training_auto_v5_2_warmstart_aligned.ipynb
-│   │   └── PINN_model_training_auto_v6_alpha_state.ipynb
-│   └── mpc/
-│       ├── PINN_MPC_v5.ipynb
-│       └── PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI.ipynb
+│   ├── current/
+│   │   ├── training/
+│   │   └── mpc/
+│   └── archive/
+│       ├── 2026-04-29/
+│       │   ├── training/
+│       │   └── mpc/
+│       └── 2026-04-28/
+│           ├── training/
+│           └── mpc/
 ├── docs/
 │   └── RESULTS.md
 ├── .gitignore
@@ -20,17 +31,11 @@ PINN_MPC/
 └── README.md
 ```
 
-## Notebooks
+## Archive Policy
 
-### Training
-
-- `notebooks/training/PINN_model_training_auto_v5_2_warmstart_aligned.ipynb`
-- `notebooks/training/PINN_model_training_auto_v6_alpha_state.ipynb`
-
-### MPC
-
-- `notebooks/mpc/PINN_MPC_v5.ipynb`
-- `notebooks/mpc/PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI.ipynb`
+- `notebooks/current/`: latest code that should be checked first.
+- `notebooks/archive/YYYY-MM-DD/`: previous training and MPC versions grouped by work date.
+- Google Drive: large results, logs, datasets, and model checkpoints.
 
 ## Data, Results, and Checkpoints
 
@@ -47,4 +52,3 @@ The `.gitignore` file excludes common local output folders such as `data/`, `out
 ## License
 
 Apache License 2.0
-
