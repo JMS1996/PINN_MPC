@@ -7,7 +7,7 @@ PINN-based model training and MPC experiment notebooks.
 The latest working notebooks are kept here so they are easy to find first:
 
 - Training: `notebooks/current/training/PINN_model_training_auto_v6_alpha_state.ipynb`
-- MPC: `notebooks/current/mpc/PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI.ipynb`
+- MPC: `notebooks/current/mpc/PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI_v4_fast_debug_guidance.ipynb`
 
 ## Repository Structure
 
