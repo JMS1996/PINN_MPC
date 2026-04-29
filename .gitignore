@@ -1,0 +1,53 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Local data, model checkpoints, and experiment outputs
+data/
+datasets/
+outputs/
+results/
+runs/
+logs/
+checkpoints/
+models/
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
