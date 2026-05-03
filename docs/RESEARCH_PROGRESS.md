@@ -2,7 +2,7 @@
 
 ## Current Working Notebook
 
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_nominal_alt_hold_horizon_PID_MPPI_Optuna_v20.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_disturbance_PID_MPPI_Optuna_v21.ipynb`
 - PINN training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
 
 ## Summary
@@ -29,6 +29,7 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - v17-v18: Pitch-axis S&C doublet and multi-disturbance experiments.
 - v19: Nominal smooth pitch doublet with longer MPPI horizon and faster update.
 - v20: Nominal smooth pitch doublet with stronger altitude-hold cost and reduced MPPI compute load.
+- v21: Two-case smooth pitch doublet comparison using nominal and one representative sine-step elevator disturbance.
 
 ## Archive
 
@@ -42,8 +43,8 @@ The latest MPC notebook remains in:
 
 ## Next Recommended Step
 
-Run v20 and compare against v19:
+Run v21 and compare nominal versus the representative disturbance case:
 
-- If altitude loss improves without large pitch RMSE degradation, keep the altitude-hold cost.
-- If pitch RMSE worsens too much, test an intermediate MPPI setting such as `MPC_HORIZON = 240` and `MPC_SAMPLES = 16-20`.
-- Once the nominal smooth pitch doublet is acceptable, reintroduce the v18 disturbance cases.
+- Compare pitch RMSE, peak pitch error, altitude loss, and speed loss for PID and MPPI.
+- If the disturbed case separates PID and MPPI clearly, keep this as the first robustness experiment.
+- If both controllers behave similarly, increase only the disturbance amplitude before returning to four disturbance cases.
