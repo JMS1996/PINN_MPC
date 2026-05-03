@@ -2,12 +2,12 @@
 
 ## Current Working Notebook
 
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_signed_disturbance_OptPID_MPPI_v23.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_multi_maneuver_integral_terminal_OptPID100_MPPI_fast_v31_fix3.ipynb`
 - PINN training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
 
 ## Summary
 
-The project moved from altitude-climb tracking toward pitch-axis stability and control maneuver tracking. Altitude climb tests exposed trim, energy, speed-unit, and sustained-climb feasibility issues that made the controller comparison difficult to interpret. The current direction is to first validate nominal pitch-axis maneuver tracking, then add disturbances once the nominal case is stable.
+The project moved from altitude-climb tracking toward pitch-axis stability and control maneuver tracking. Altitude climb tests exposed trim, energy, speed-unit, and sustained-climb feasibility issues that made the controller comparison difficult to interpret. The current direction is multi-maneuver pitch-axis S&C tracking with altitude-preserving PINN-MPPI, compared against strong Optuna-tuned PID baselines in JSBSim.
 
 ## Key Findings
 
@@ -19,6 +19,10 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - The smooth pitch doublet nominal case improved MPPI tracking compared with the step doublet, but MPPI remains computationally expensive.
 - v20 strengthens altitude-hold cost and reduces MPPI horizon/sample count to explore the pitch-tracking versus compute-time trade-off.
 - v23 adds Optuna-tuned PID back into the comparison, uses nominal plus signed sine-step elevator disturbances, and strengthens MPC altitude/speed preservation costs.
+- W0 MPPI sample sweeps showed that increasing MPPI samples reduces stochastic variance but does not remove systematic altitude-loss bias by itself.
+- Prediction diagnostics showed that short-horizon PINN-vs-JSBSim mismatch was small, so the dominant issue was MPC cost/guidance calibration rather than PINN rollout failure.
+- Adding altitude-error integral guidance plus asymmetric terminal altitude and sink-rate costs removed the MPPI altitude-loss bias in W0.
+- In the latest 100-trial PID comparison, PID tracks pitch more tightly, while integral-terminal MPPI preserves altitude better across multiple S&C maneuvers and signed disturbances.
 
 ## Notebook Evolution
 
@@ -33,6 +37,11 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - v21: Two-case smooth pitch doublet comparison using nominal and one representative sine-step elevator disturbance.
 - v22: Fast two-case comparison using simple PID, no Optuna, shorter simulation, shorter MPPI horizon, and one representative disturbance.
 - v23: Signed-disturbance comparison with Optuna-tuned PID, MPPI, W0 nominal, W1 positive sine-step disturbance, and W2 sign-reversed sine-step disturbance.
+- v24-v26: Stronger altitude/speed costs, altitude-hold augmented guidance, and multi-disturbance pitch-doublet studies.
+- v27: W0 MPPI sample sweep; sample count reduced variance but did not remove altitude bias.
+- v28: W0 PINN-vs-JSBSim prediction diagnostics; mismatch was small over the MPC horizon.
+- v29-v30: Altitude-error integral guidance and strong terminal altitude/sink-rate costs; MPPI altitude drift was removed and held under disturbances.
+- v31: Multi-maneuver S&C comparison. The latest `v31_fix3` uses three maneuvers, W0/W1/W2 disturbances, and a 100-trial Optuna PID baseline.
 
 ## Archive
 
@@ -46,9 +55,8 @@ The latest MPC notebook remains in:
 
 ## Next Recommended Step
 
-Run v23 and compare nominal, positive disturbance, and sign-reversed disturbance cases:
+Use `v31_fix3` as the current S&C baseline:
 
-- Compare pitch RMSE, peak pitch error, altitude loss, and speed loss for PID and MPPI.
-- Check whether MPPI improves in both W1 and W2. If it only improves for one sign, the disturbance may be helping the maneuver rather than demonstrating robust tracking.
-- Watch MPPI compute time after Optuna PID is enabled; if Colab disconnects, reduce `PID_TRIALS`, `MPC_SAMPLES`, or `SIM_TIME_S` first.
-- If v23 is stable, repeat with a second disturbance family such as pure sine or weak step before returning to task-aware guidance.
+- Treat PID as the pitch-tracking-optimized baseline.
+- Treat integral-terminal MPPI as the altitude-preserving predictive controller.
+- Next, either run the full maneuver set overnight or document the pitch-tracking versus altitude-preservation trade-off before moving toward task-aware guidance.
