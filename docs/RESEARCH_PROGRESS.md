@@ -2,7 +2,7 @@
 
 ## Current Working Notebook
 
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_disturbance_PID_MPPI_Optuna_v21.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_simplePID_MPPI_fast_v22.ipynb`
 - PINN training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
 
 ## Summary
@@ -30,6 +30,7 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - v19: Nominal smooth pitch doublet with longer MPPI horizon and faster update.
 - v20: Nominal smooth pitch doublet with stronger altitude-hold cost and reduced MPPI compute load.
 - v21: Two-case smooth pitch doublet comparison using nominal and one representative sine-step elevator disturbance.
+- v22: Fast two-case comparison using simple PID, no Optuna, shorter simulation, shorter MPPI horizon, and one representative disturbance.
 
 ## Archive
 
@@ -43,8 +44,9 @@ The latest MPC notebook remains in:
 
 ## Next Recommended Step
 
-Run v21 and compare nominal versus the representative disturbance case:
+Run v22 and compare nominal versus the representative disturbance case:
 
 - Compare pitch RMSE, peak pitch error, altitude loss, and speed loss for PID and MPPI.
+- Use v22 first for quick iteration without Colab disconnects.
 - If the disturbed case separates PID and MPPI clearly, keep this as the first robustness experiment.
-- If both controllers behave similarly, increase only the disturbance amplitude before returning to four disturbance cases.
+- If v22 is stable, increase horizon/sample count or re-enable Optuna only after the quick case is understood.

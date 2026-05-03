@@ -32,13 +32,13 @@ lookup.
 Current experiment name:
 
 ```text
-v6_alpha_snc_smooth_pitch_doublet_two_case_disturbance_PID_MPPI_Optuna_v21
+v6_alpha_snc_smooth_pitch_doublet_two_case_simplePID_MPPI_fast_v22
 ```
 
 Current working MPC notebook:
 
 ```text
-notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_disturbance_PID_MPPI_Optuna_v21.ipynb
+notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_simplePID_MPPI_fast_v22.ipynb
 ```
 
 ## Notes
