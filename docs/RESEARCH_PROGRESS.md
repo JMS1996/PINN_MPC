@@ -2,7 +2,7 @@
 
 ## Current Working Notebook
 
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_simplePID_MPPI_fast_v22.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_signed_disturbance_OptPID_MPPI_v23.ipynb`
 - PINN training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
 
 ## Summary
@@ -18,6 +18,7 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - PID is tuned with JSBSim rollout through Optuna. MPPI intentionally remains PINN-prediction based, which is the intended research comparison.
 - The smooth pitch doublet nominal case improved MPPI tracking compared with the step doublet, but MPPI remains computationally expensive.
 - v20 strengthens altitude-hold cost and reduces MPPI horizon/sample count to explore the pitch-tracking versus compute-time trade-off.
+- v23 adds Optuna-tuned PID back into the comparison, uses nominal plus signed sine-step elevator disturbances, and strengthens MPC altitude/speed preservation costs.
 
 ## Notebook Evolution
 
@@ -31,6 +32,7 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - v20: Nominal smooth pitch doublet with stronger altitude-hold cost and reduced MPPI compute load.
 - v21: Two-case smooth pitch doublet comparison using nominal and one representative sine-step elevator disturbance.
 - v22: Fast two-case comparison using simple PID, no Optuna, shorter simulation, shorter MPPI horizon, and one representative disturbance.
+- v23: Signed-disturbance comparison with Optuna-tuned PID, MPPI, W0 nominal, W1 positive sine-step disturbance, and W2 sign-reversed sine-step disturbance.
 
 ## Archive
 
@@ -44,9 +46,9 @@ The latest MPC notebook remains in:
 
 ## Next Recommended Step
 
-Run v22 and compare nominal versus the representative disturbance case:
+Run v23 and compare nominal, positive disturbance, and sign-reversed disturbance cases:
 
 - Compare pitch RMSE, peak pitch error, altitude loss, and speed loss for PID and MPPI.
-- Use v22 first for quick iteration without Colab disconnects.
-- If the disturbed case separates PID and MPPI clearly, keep this as the first robustness experiment.
-- If v22 is stable, increase horizon/sample count or re-enable Optuna only after the quick case is understood.
+- Check whether MPPI improves in both W1 and W2. If it only improves for one sign, the disturbance may be helping the maneuver rather than demonstrating robust tracking.
+- Watch MPPI compute time after Optuna PID is enabled; if Colab disconnects, reduce `PID_TRIALS`, `MPC_SAMPLES`, or `SIM_TIME_S` first.
+- If v23 is stable, repeat with a second disturbance family such as pure sine or weak step before returning to task-aware guidance.

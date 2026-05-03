@@ -7,7 +7,7 @@ PINN-based model training and MPC experiment notebooks.
 The latest working notebooks are kept here so they are easy to find first:
 
 - Training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_two_case_simplePID_MPPI_fast_v22.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_signed_disturbance_OptPID_MPPI_v23.ipynb`
 
 For VS Code usage, start with `docs/VSCODE_COLAB_RUN.md`.
 
