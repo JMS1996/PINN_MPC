@@ -6,8 +6,16 @@ PINN-based model training and MPC experiment notebooks.
 
 The latest working notebooks are kept here so they are easy to find first:
 
-- Training: `notebooks/current/training/PINN_model_training_auto_v6_alpha_state.ipynb`
-- MPC: `notebooks/current/mpc/PINN_MPC_v6_alpha_LOAD_ONLY_PID_CEM_MPPI_v4_fast_debug_guidance.ipynb`
+- Training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_smooth_pitch_doublet_nominal_alt_hold_horizon_PID_MPPI_Optuna_v20.ipynb`
+
+For VS Code usage, start with `docs/VSCODE_COLAB_RUN.md`.
+
+Research status and notebook history are summarized in `docs/RESEARCH_PROGRESS.md`.
+
+## Notebook Naming
+
+Use the notebook naming rule in `docs/NOTEBOOK_NAMING.md` for new notebooks.
 
 ## Repository Structure
 
