@@ -32,13 +32,13 @@ lookup.
 Current experiment name:
 
 ```text
-v6_alpha_snc_multi_maneuver_integral_terminal_OptPID100_MPPI_fast_v31_fix3
+v7_alpha_throttle_snc_D5_2input_MPPI_PID_v38_settle_trim_start
 ```
 
 Current working MPC notebook:
 
 ```text
-notebooks/current/MPC/PINN_MPC_v6_alpha_snc_multi_maneuver_integral_terminal_OptPID100_MPPI_fast_v31_fix3.ipynb
+notebooks/current/MPC/PINN_MPC_v7_alpha_throttle_snc_D5_2input_MPPI_PID_v38_settle_trim_start.ipynb
 ```
 
 ## Notes
@@ -48,8 +48,10 @@ Keep source notebooks in GitHub. Keep large outputs and checkpoints in
 
 ## Latest S&C Result Summary
 
-The latest fast multi-maneuver screen compares a 100-trial Optuna PID baseline
-against integral-terminal PINN-MPPI on three pitch-axis S&C references and
-signed disturbances. PID gives better pitch reference RMSE, while MPPI gives
-better altitude preservation and lower final altitude error.
+The latest v38 settle-trim-start notebook uses the v7 alpha-throttle PINN and upgrades MPPI from
+elevator-only to two-input `[elevator, throttle]` control. The fixed
+`D5_smooth_doublet` disturbance sweep remains the comparison setup, but throttle
+now gives the predictive controller an explicit energy-management channel. v34
+also cleans up checkpoint discovery for both `/content/drive/MyDrive` and
+`/content/drive` Drive layouts.
 

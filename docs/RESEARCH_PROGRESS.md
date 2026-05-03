@@ -2,12 +2,12 @@
 
 ## Current Working Notebook
 
-- MPC: `notebooks/current/MPC/PINN_MPC_v6_alpha_snc_multi_maneuver_integral_terminal_OptPID100_MPPI_fast_v31_fix3.ipynb`
-- PINN training: `notebooks/current/PINN/PINN_model_training_auto_v6_alpha_state.ipynb`
+- MPC: `notebooks/current/MPC/PINN_MPC_v7_alpha_throttle_snc_D5_2input_MPPI_PID_v38_settle_trim_start.ipynb`
+- PINN training: `notebooks/current/PINN/PINN_model_training_auto_v7_alpha_throttle_state.ipynb`
 
 ## Summary
 
-The project moved from altitude-climb tracking toward pitch-axis stability and control maneuver tracking. Altitude climb tests exposed trim, energy, speed-unit, and sustained-climb feasibility issues that made the controller comparison difficult to interpret. The current direction is multi-maneuver pitch-axis S&C tracking with altitude-preserving PINN-MPPI, compared against strong Optuna-tuned PID baselines in JSBSim.
+The project moved from altitude-climb tracking toward pitch-axis stability and control maneuver tracking. Altitude climb tests exposed trim, energy, speed-unit, and sustained-climb feasibility issues that made the controller comparison difficult to interpret. The current direction fixes one representative S&C maneuver and sweeps plant-side disturbance type/severity to evaluate whether altitude-preserving PINN-MPPI is more robust than a strong Optuna-tuned PID baseline.
 
 ## Key Findings
 
@@ -22,7 +22,8 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - W0 MPPI sample sweeps showed that increasing MPPI samples reduces stochastic variance but does not remove systematic altitude-loss bias by itself.
 - Prediction diagnostics showed that short-horizon PINN-vs-JSBSim mismatch was small, so the dominant issue was MPC cost/guidance calibration rather than PINN rollout failure.
 - Adding altitude-error integral guidance plus asymmetric terminal altitude and sink-rate costs removed the MPPI altitude-loss bias in W0.
-- In the latest 100-trial PID comparison, PID tracks pitch more tightly, while integral-terminal MPPI preserves altitude better across multiple S&C maneuvers and signed disturbances.
+- The current v32 experiment fixes the maneuver to `D5_smooth_doublet` and sweeps disturbance type/severity so the research claim can focus on robust response under plant-side disturbances.
+- The next model revision is v7 alpha-throttle: the PINN input is expanded from elevator-only to `[elevator, throttle, prev_elevator, prev_throttle, delevator, dthrottle]` so future MPC can manage pitch and energy separately.
 
 ## Notebook Evolution
 
@@ -41,7 +42,11 @@ The project moved from altitude-climb tracking toward pitch-axis stability and c
 - v27: W0 MPPI sample sweep; sample count reduced variance but did not remove altitude bias.
 - v28: W0 PINN-vs-JSBSim prediction diagnostics; mismatch was small over the MPC horizon.
 - v29-v30: Altitude-error integral guidance and strong terminal altitude/sink-rate costs; MPPI altitude drift was removed and held under disturbances.
-- v31: Multi-maneuver S&C comparison. The latest `v31_fix3` uses three maneuvers, W0/W1/W2 disturbances, and a 100-trial Optuna PID baseline.
+- v31: Multi-maneuver S&C comparison. `v31_fix3` uses three maneuvers, W0/W1/W2 disturbances, and a 100-trial Optuna PID baseline.
+- v32: Fixed-maneuver disturbance sweep. `D5_smooth_doublet` is held constant while W0-W8 disturbance cases vary type, sign, frequency, and severity.
+- PINN v7 alpha-throttle: New training notebook for elevator+throttle dynamics prediction and checkpoint `pinn_dynamics_c172_2d_v7_alpha_throttle.pt`.
+- v33: First MPC notebook using v7 alpha-throttle. MPPI optimizes `[elevator, throttle]`, and PID adds a throttle speed-hold loop for a more physical longitudinal comparison.
+- v38 settle-trim-start: Checkpoint-path clean restart of v33. It searches both `/content/drive/MyDrive` and `/content/drive` for `pinn_dynamics_c172_2d_v7_alpha_throttle.pt`.
 
 ## Archive
 
@@ -55,8 +60,8 @@ The latest MPC notebook remains in:
 
 ## Next Recommended Step
 
-Use `v31_fix3` as the current S&C baseline:
+Use `v38_settle_trim_start` as the current two-input disturbance-robustness baseline:
 
-- Treat PID as the pitch-tracking-optimized baseline.
-- Treat integral-terminal MPPI as the altitude-preserving predictive controller.
-- Next, either run the full maneuver set overnight or document the pitch-tracking versus altitude-preservation trade-off before moving toward task-aware guidance.
+- Treat `D5_smooth_doublet` as the fixed maneuver.
+- Compare PID and two-input MPPI degradation from W0 for each disturbance family.
+- Check whether throttle authority reduces the pitch-vs-altitude/speed trade-off observed in elevator-only MPPI.
