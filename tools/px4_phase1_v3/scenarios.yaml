@@ -1,0 +1,65 @@
+run_name: px4_phase1_standard_vtol_nominal_maneuver_v3
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udpin://:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 55.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 8.0
+  transition_to_fixedwing: false
+  analysis_start_s: 10.0
+  analysis_end_s: null
+  maneuver_type: offboard_position_ned
+  start_offboard_after_takeoff: true
+  offboard_initial_hold_s: 2.0
+  setpoint_rate_hz: 20.0
+  metadata:
+    project_phase: phase1_nominal_maneuver_data
+    platform: px4_gazebo_standard_vtol
+    regime: multicopter_takeoff_hover_offboard
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "v3 nominal maneuver collection. No disturbance injection and no PINN training."
+
+scenarios:
+  - name: M0_hover_hold_25m
+    duration_s: 45.0
+    setpoints:
+      - {label: hold_25m, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 30.0}
+
+  - name: M1_altitude_step_25_35_25m
+    duration_s: 70.0
+    setpoints:
+      - {label: hold_25m, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: climb_35m, north_m: 0.0, east_m: 0.0, altitude_m: 35.0, yaw_deg: 0.0, hold_s: 18.0}
+      - {label: descend_25m, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 18.0}
+
+  - name: M2_north_step_0_20_0m
+    duration_s: 75.0
+    setpoints:
+      - {label: origin_hold, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: north_20m, north_m: 20.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 22.0}
+      - {label: origin_return, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 22.0}
+
+  - name: M3_square_20m
+    duration_s: 95.0
+    setpoints:
+      - {label: p0, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: p1_north, north_m: 20.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 14.0}
+      - {label: p2_ne, north_m: 20.0, east_m: 20.0, altitude_m: 25.0, yaw_deg: 90.0, hold_s: 14.0}
+      - {label: p3_east, north_m: 0.0, east_m: 20.0, altitude_m: 25.0, yaw_deg: 180.0, hold_s: 14.0}
+      - {label: p0_return, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 14.0}
+
+  - name: M4_yaw_step_0_45_0deg
+    duration_s: 65.0
+    setpoints:
+      - {label: yaw_0, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 10.0}
+      - {label: yaw_45, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 45.0, hold_s: 18.0}
+      - {label: yaw_0_return, north_m: 0.0, east_m: 0.0, altitude_m: 25.0, yaw_deg: 0.0, hold_s: 18.0}

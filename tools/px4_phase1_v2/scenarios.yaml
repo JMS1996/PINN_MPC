@@ -1,0 +1,39 @@
+run_name: px4_phase1_standard_vtol_v2
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udp://:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 45.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 8.0
+  transition_to_fixedwing: false
+  analysis_start_s: 12.0
+  analysis_end_s: null
+  metadata:
+    project_phase: phase1_data_collection
+    platform: px4_gazebo_standard_vtol
+    regime: takeoff_hover_hold
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "v2 fresh-process nominal data collection with stale PX4/Gazebo cleanup. Disturbances and PINN training are intentionally excluded."
+
+scenarios:
+  - name: W0_nominal_takeoff_hold_45s
+    duration_s: 45.0
+    metadata:
+      disturbance_family: none
+      disturbance_severity: 0.0
+
+  - name: W0_nominal_takeoff_hold_75s
+    duration_s: 75.0
+    metadata:
+      disturbance_family: none
+      disturbance_severity: 0.0
+      note: "Longer fresh-process nominal run for stability and sample-continuity checks."

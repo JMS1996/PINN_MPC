@@ -1,0 +1,35 @@
+run_name: px4_standard_vtol_headless_v51
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udp://:14540
+output_root: ~/px4_datasets
+
+defaults:
+  launch_px4: true
+  headless: true
+  duration_s: 45.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  transition_to_fixedwing: false
+  hold_after_takeoff_s: 8.0
+  metadata:
+    regime: initial_hover_takeoff_hold
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "First PX4 Gazebo data-collection sanity run. No PINN training and no disturbance injection here."
+
+scenarios:
+  - name: W0_nominal_takeoff_hold
+    duration_s: 45.0
+    metadata:
+      disturbance_family: none
+      disturbance_severity: 0.0
+
+  - name: W0_nominal_longer_hold
+    duration_s: 75.0
+    metadata:
+      disturbance_family: none
+      disturbance_severity: 0.0
+      note: "Longer nominal log to inspect telemetry continuity and speed/altitude drift."

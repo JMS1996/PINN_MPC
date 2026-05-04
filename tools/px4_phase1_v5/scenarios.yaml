@@ -1,0 +1,104 @@
+run_name: px4_phase1_standard_vtol_rate_thrust_safe_v5
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udpin://0.0.0.0:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 25.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 8.0
+  analysis_start_s: 6.0
+  analysis_end_s: null
+  maneuver_type: offboard_attitude_rate
+  start_offboard_after_takeoff: true
+  offboard_initial_hold_s: 1.0
+  setpoint_rate_hz: 40.0
+  nominal_thrust: 0.38
+  safety:
+    enabled: true
+    min_altitude_m: 8.0
+    max_altitude_m: 80.0
+    max_abs_roll_deg: 45.0
+    max_abs_pitch_deg: 45.0
+    max_abs_rate_deg_s: 180.0
+  metadata:
+    project_phase: phase1_rate_setpoint_data
+    platform: px4_gazebo_standard_vtol
+    regime: multicopter_hover_rate_setpoint_excitation
+    control_layer: "PINN-MPC future layer -> PX4 rate controller setpoint"
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "v5 adds safety aborts and hover-thrust calibration candidates. No disturbance injection."
+
+scenarios:
+  # First run these one by one. Pick the thrust with smallest altitude drift.
+  - name: T0_thrust_cal_032
+    duration_s: 18.0
+    nominal_thrust: 0.32
+    rate_setpoints:
+      - {label: thrust_cal_032, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.32, hold_s: 10.0}
+
+  - name: T1_thrust_cal_036
+    duration_s: 18.0
+    nominal_thrust: 0.36
+    rate_setpoints:
+      - {label: thrust_cal_036, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.36, hold_s: 10.0}
+
+  - name: T2_thrust_cal_040
+    duration_s: 18.0
+    nominal_thrust: 0.40
+    rate_setpoints:
+      - {label: thrust_cal_040, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.40, hold_s: 10.0}
+
+  - name: T3_thrust_cal_044
+    duration_s: 18.0
+    nominal_thrust: 0.44
+    rate_setpoints:
+      - {label: thrust_cal_044, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.44, hold_s: 10.0}
+
+  # Use only after selecting nominal_thrust from T* calibration.
+  - name: R1_pitch_rate_doublet_safe
+    duration_s: 35.0
+    nominal_thrust: 0.38
+    rate_setpoints:
+      - {label: pre_hold, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 5.0}
+      - {label: pitch_up_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 6.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 0.8}
+      - {label: neutral_1, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 2.0}
+      - {label: pitch_down_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: -6.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 0.8}
+      - {label: recovery, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 12.0}
+
+  - name: R2_roll_rate_doublet_safe
+    duration_s: 35.0
+    nominal_thrust: 0.38
+    rate_setpoints:
+      - {label: pre_hold, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 5.0}
+      - {label: roll_right_rate, roll_rate_deg_s: 6.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 0.8}
+      - {label: neutral_1, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 2.0}
+      - {label: roll_left_rate, roll_rate_deg_s: -6.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 0.8}
+      - {label: recovery, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 12.0}
+
+  - name: R3_yaw_rate_step_safe
+    duration_s: 35.0
+    nominal_thrust: 0.38
+    rate_setpoints:
+      - {label: pre_hold, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 5.0}
+      - {label: yaw_right_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 8.0, thrust: 0.38, hold_s: 2.0}
+      - {label: neutral_1, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 3.0}
+      - {label: yaw_left_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: -8.0, thrust: 0.38, hold_s: 2.0}
+      - {label: recovery, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 10.0}
+
+  - name: R4_thrust_step_safe
+    duration_s: 35.0
+    nominal_thrust: 0.38
+    rate_setpoints:
+      - {label: pre_hold, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 5.0}
+      - {label: thrust_up, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.41, hold_s: 1.2}
+      - {label: neutral_1, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 3.0}
+      - {label: thrust_down, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.35, hold_s: 1.2}
+      - {label: recovery, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.38, hold_s: 10.0}
