@@ -1,0 +1,76 @@
+run_name: px4_phase1_standard_vtol_rate_thrust_cal_v9
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udpin://0.0.0.0:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 20.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 3.0
+  wait_for_takeoff_altitude: true
+  takeoff_ready_altitude_m: 22.0
+  takeoff_ready_timeout_s: 45.0
+  analysis_start_s: 0.0
+  analysis_end_s: null
+  maneuver_type: offboard_attitude_rate
+  start_offboard_after_takeoff: true
+  offboard_initial_hold_s: 0.5
+  setpoint_rate_hz: 40.0
+  nominal_thrust: 0.516
+  safety:
+    enabled: true
+    min_altitude_m: 5.0
+    max_altitude_m: 90.0
+    max_abs_roll_deg: 45.0
+    max_abs_pitch_deg: 45.0
+    max_abs_rate_deg_s: 220.0
+  metadata:
+    project_phase: phase1_rate_setpoint_data
+    platform: px4_gazebo_standard_vtol
+    regime: multicopter_hover_rate_setpoint_excitation
+    control_layer: "PINN-MPC future layer -> PX4 rate controller setpoint"
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "v9 narrows hover thrust between v8 0.510 falling and 0.520 climbing."
+
+scenarios:
+  - name: T0_thrust_cal_0514
+    duration_s: 20.0
+    nominal_thrust: 0.514
+    rate_setpoints:
+      - {label: thrust_cal_0514, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.514, hold_s: 16.0}
+
+  - name: T1_thrust_cal_0516
+    duration_s: 20.0
+    nominal_thrust: 0.516
+    rate_setpoints:
+      - {label: thrust_cal_0516, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 16.0}
+
+  - name: T2_thrust_cal_0518
+    duration_s: 20.0
+    nominal_thrust: 0.518
+    rate_setpoints:
+      - {label: thrust_cal_0518, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.518, hold_s: 16.0}
+
+  - name: T3_thrust_cal_0519
+    duration_s: 20.0
+    nominal_thrust: 0.519
+    rate_setpoints:
+      - {label: thrust_cal_0519, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.519, hold_s: 16.0}
+
+  # Use the best calibrated thrust by updating these values after T* runs.
+  - name: R1_pitch_rate_doublet_safe
+    duration_s: 35.0
+    nominal_thrust: 0.516
+    rate_setpoints:
+      - {label: pre_hold, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 5.0}
+      - {label: pitch_up_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 5.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 0.7}
+      - {label: neutral_1, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 2.0}
+      - {label: pitch_down_rate, roll_rate_deg_s: 0.0, pitch_rate_deg_s: -5.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 0.7}
+      - {label: recovery, roll_rate_deg_s: 0.0, pitch_rate_deg_s: 0.0, yaw_rate_deg_s: 0.0, thrust: 0.516, hold_s: 12.0}

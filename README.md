@@ -1,61 +1,67 @@
-# PINN MPC
+# PINN MPC Research Workspace
 
-PINN-based model training and MPC experiment notebooks.
+This repository tracks the research code, notebooks, and reproducibility notes for PINN-based aircraft/vehicle dynamics modeling and mission-level planning experiments.
 
-## Current Notebooks
+## Current Direction
 
-The latest working notebooks are kept here so they are easy to find first:
+The active research direction has been rebooted around:
 
-- Training: `notebooks/current/PINN/PINN_model_training_auto_v7_alpha_throttle_state.ipynb`
-- MPC: `notebooks/current/MPC/PINN_MPC_v7_alpha_throttle_snc_D5_2input_MPPI_PID_v38_settle_trim_start.ipynb`
+```text
+PX4 multicopter closed-loop response
+-> task-aware PINN surrogate
+-> rollout-based ETA / error / risk prediction
+-> dynamics-aware mission planning cost
+```
 
-For VS Code usage, start with `docs/VSCODE_COLAB_RUN.md`.
+The goal is no longer to make a low-level PINN-MPC controller first. The near-term goal is to learn a reliable PX4 closed-loop task response surrogate and use it as a mission-cost predictor.
 
-Research status and notebook history are summarized in `docs/RESEARCH_PROGRESS.md`.
+Start here:
 
-## Notebook Naming
-
-Use the notebook naming rule in `docs/NOTEBOOK_NAMING.md` for new notebooks.
+- New project workspace: `projects/px4_task_aware_mission_planning/`
+- Reboot plan: `docs/PX4_RESEARCH_REBOOT_PLAN.md`
+- Phase 1 history plan: `docs/PX4_PHASE1_RESEARCH_PLAN.md`
+- Latest task rollout notebook: `notebooks/current/MPC/PX4_Phase1_TaskAware_PINN_Rollout_Simulator_v1.ipynb`
 
 ## Repository Structure
 
 ```text
 PINN_MPC/
-├── notebooks/
-│   ├── current/
-│   │   ├── training/
-│   │   └── mpc/
-│   └── archive/
-│       ├── 2026-04-29/
-│       │   ├── training/
-│       │   └── mpc/
-│       └── 2026-04-28/
-│           ├── training/
-│           └── mpc/
 ├── docs/
-│   └── RESULTS.md
-├── .gitignore
-├── LICENSE
-└── README.md
+│   ├── PX4_RESEARCH_REBOOT_PLAN.md
+│   └── PX4_PHASE1_RESEARCH_PLAN.md
+├── notebooks/
+│   └── current/
+│       ├── PINN/
+│       └── MPC/
+├── projects/
+│   └── px4_task_aware_mission_planning/
+└── tools/
+    ├── archive/
+    ├── px4_phase1_v16_recovery_tracking_error/
+    └── px4_dataset_builder_v9_tracking_error/
 ```
 
-## Archive Policy
+## Historical Code
 
-- `notebooks/current/`: latest code that should be checked first.
-- `notebooks/archive/YYYY-MM-DD/`: previous training and MPC versions grouped by work date.
-- Google Drive: large results, logs, datasets, and model checkpoints.
+Earlier work is intentionally preserved:
+
+- C172 / JSBSim trim and PINN-MPC experiments
+- PX4 rate-setpoint data collection experiments
+- PX4 closed-loop dynamics training experiments
+- PINN-MPC recovery experiments
+
+These are useful as research history, but the new active project should use the `projects/px4_task_aware_mission_planning/` workflow.
 
 ## Data, Results, and Checkpoints
 
-Large files such as datasets, trained model checkpoints, logs, and generated experiment results are not tracked in this repository.
+Large files are not tracked in Git:
 
-Recommended external storage:
+- PX4 datasets
+- trained checkpoints
+- Colab result folders
+- generated logs and plots
 
-- Google Drive for large result folders
-- Google Drive for model checkpoints
-- GitHub for source notebooks, documentation, configuration, and small reproducibility notes
-
-The `.gitignore` file excludes common local output folders such as `data/`, `outputs/`, `results/`, `runs/`, `logs/`, `checkpoints/`, and model checkpoint files.
+Use Google Drive or local external storage for large artifacts. Git should contain source notebooks, scripts, configs, and small documentation.
 
 ## License
 

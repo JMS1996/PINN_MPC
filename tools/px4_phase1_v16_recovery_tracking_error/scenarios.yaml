@@ -1,0 +1,154 @@
+run_name: px4_phase1_standard_vtol_recovery_tracking_error_dataset_v16
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udpin://0.0.0.0:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 45.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 3.0
+  wait_for_takeoff_altitude: true
+  takeoff_ready_altitude_m: 22.0
+  takeoff_ready_timeout_s: 45.0
+  wait_for_hover_ready: true
+  hover_ready_target_altitude_m: 25.0
+  hover_ready_altitude_tolerance_m: 1.2
+  hover_ready_max_abs_vz_m_s: 0.35
+  hover_ready_stable_s: 2.0
+  hover_ready_timeout_s: 60.0
+  analysis_start_s: 0.0
+  analysis_end_s: null
+  maneuver_type: offboard_position_ned
+  start_offboard_after_takeoff: true
+  offboard_initial_hold_s: 1.0
+  setpoint_rate_hz: 20.0
+  safety:
+    enabled: true
+    min_altitude_m: 5.0
+    max_altitude_m: 70.0
+    max_abs_roll_deg: 45.0
+    max_abs_pitch_deg: 45.0
+    max_abs_rate_deg_s: 200.0
+  metadata:
+    project_phase: phase1_recovery_tracking_error_dataset
+    platform: px4_gazebo_standard_vtol
+    regime: multicopter_hover_closed_loop_position_recovery
+    control_layer: "Future PINN-MPC layer -> PX4 position offboard setpoint -> PX4 cascaded controllers -> Gazebo plant"
+    disturbance_family: state_offset_recovery
+    disturbance_severity: mixed
+    note: "v16 intentionally creates tracking-error regimes by moving the vehicle away from the nominal hold target and then commanding the nominal setpoint again. This approximates external-disturbance recovery without injecting forces."
+
+scenarios:
+  - name: R00_nominal_hold_25m
+    duration_s: 35.0
+    metadata:
+      disturbance_family: none
+      disturbance_axis: none
+    position_setpoints:
+      - {label: nominal_hold, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 28.0}
+
+  - name: R01_north_offset_plus1_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: north
+      offset_m: 1.0
+    position_setpoints:
+      - {label: pre_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_north_plus1, north_m: 1.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R02_north_offset_minus1_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: north
+      offset_m: -1.0
+    position_setpoints:
+      - {label: pre_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_north_minus1, north_m: -1.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R03_east_offset_plus1_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: east
+      offset_m: 1.0
+    position_setpoints:
+      - {label: pre_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_east_plus1, north_m: 0.0, east_m: 1.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R04_east_offset_minus1_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: east
+      offset_m: -1.0
+    position_setpoints:
+      - {label: pre_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_east_minus1, north_m: 0.0, east_m: -1.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R05_altitude_low_recover
+    duration_s: 48.0
+    metadata:
+      disturbance_axis: altitude
+      offset_m: -1.0
+    position_setpoints:
+      - {label: pre_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_to_24m, north_m: 0.0, east_m: 0.0, down_m: -24.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 10.0}
+
+  - name: R06_altitude_high_recover
+    duration_s: 48.0
+    metadata:
+      disturbance_axis: altitude
+      offset_m: 1.0
+    position_setpoints:
+      - {label: pre_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_to_26m, north_m: 0.0, east_m: 0.0, down_m: -26.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: recover_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 10.0}
+
+  - name: R07_yaw_plus10_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: yaw
+      offset_deg: 10.0
+    position_setpoints:
+      - {label: pre_hold_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_yaw_plus10, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 10.0, hold_s: 5.0}
+      - {label: recover_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R08_yaw_minus10_recover
+    duration_s: 46.0
+    metadata:
+      disturbance_axis: yaw
+      offset_deg: -10.0
+    position_setpoints:
+      - {label: pre_hold_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_yaw_minus10, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: -10.0, hold_s: 5.0}
+      - {label: recover_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}
+      - {label: final_hold_yaw0, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 8.0}
+
+  - name: R09_mixed_offset_recover
+    duration_s: 58.0
+    metadata:
+      disturbance_axis: mixed
+      offset_m: mixed
+    position_setpoints:
+      - {label: pre_hold_center, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 5.0}
+      - {label: displace_ne_up_yaw, north_m: 1.0, east_m: 1.0, down_m: -26.0, yaw_offset_deg: 8.0, hold_s: 6.0}
+      - {label: recover_center_1, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 12.0}
+      - {label: displace_sw_down_yaw, north_m: -1.0, east_m: -1.0, down_m: -24.0, yaw_offset_deg: -8.0, hold_s: 6.0}
+      - {label: recover_center_2, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_offset_deg: 0.0, hold_s: 14.0}

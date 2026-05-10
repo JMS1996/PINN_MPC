@@ -1,0 +1,132 @@
+run_name: px4_phase1_standard_vtol_closed_loop_dataset_v14
+px4_dir: ~/src/PX4-Autopilot
+vehicle: gz_standard_vtol
+connection_url: udpin://0.0.0.0:14540
+output_root: ~/px4_datasets
+
+defaults:
+  headless: true
+  launch_wait_s: 25.0
+  duration_s: 40.0
+  sample_period_s: 0.05
+  arm: true
+  takeoff: true
+  takeoff_altitude_m: 25.0
+  hold_after_takeoff_s: 3.0
+  wait_for_takeoff_altitude: true
+  takeoff_ready_altitude_m: 22.0
+  takeoff_ready_timeout_s: 45.0
+  wait_for_hover_ready: true
+  hover_ready_target_altitude_m: 25.0
+  hover_ready_altitude_tolerance_m: 1.2
+  hover_ready_max_abs_vz_m_s: 0.35
+  hover_ready_stable_s: 2.0
+  hover_ready_timeout_s: 60.0
+  analysis_start_s: 0.0
+  analysis_end_s: null
+  maneuver_type: offboard_position_ned
+  start_offboard_after_takeoff: true
+  offboard_initial_hold_s: 1.0
+  setpoint_rate_hz: 20.0
+  safety:
+    enabled: true
+    min_altitude_m: 5.0
+    max_altitude_m: 70.0
+    max_abs_roll_deg: 45.0
+    max_abs_pitch_deg: 45.0
+    max_abs_rate_deg_s: 200.0
+  metadata:
+    project_phase: phase1_closed_loop_dynamics_dataset
+    platform: px4_gazebo_standard_vtol
+    regime: multicopter_hover_closed_loop_position_velocity_setpoint_excitation
+    control_layer: "Future PINN-MPC layer -> PX4 position/velocity offboard setpoint -> PX4 cascaded controllers -> Gazebo plant"
+    disturbance_family: none
+    disturbance_severity: 0.0
+    note: "v14 replaces open-loop thrust/rate excitation with PX4 closed-loop position/velocity offboard data so altitude hold is part of the observed plant."
+
+scenarios:
+  - name: C00_position_hold_25m
+    duration_s: 35.0
+    position_setpoints:
+      - {label: hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 28.0}
+
+  - name: C01_altitude_step_25_28_25m
+    duration_s: 45.0
+    position_setpoints:
+      - {label: pre_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: climb_to_28m, north_m: 0.0, east_m: 0.0, down_m: -28.0, yaw_deg: 0.0, hold_s: 10.0}
+      - {label: return_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 14.0}
+
+  - name: C02_altitude_step_25_22_25m
+    duration_s: 45.0
+    position_setpoints:
+      - {label: pre_hold_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: descend_to_22m, north_m: 0.0, east_m: 0.0, down_m: -22.0, yaw_deg: 0.0, hold_s: 10.0}
+      - {label: return_25m, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 14.0}
+
+  - name: C03_north_position_step_pm2m
+    duration_s: 45.0
+    position_setpoints:
+      - {label: pre_hold, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: north_plus_2m, north_m: 2.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: center_1, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: north_minus_2m, north_m: -2.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: recovery, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C04_east_position_step_pm2m
+    duration_s: 45.0
+    position_setpoints:
+      - {label: pre_hold, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: east_plus_2m, north_m: 0.0, east_m: 2.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: center_1, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: east_minus_2m, north_m: 0.0, east_m: -2.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+      - {label: recovery, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C05_yaw_position_hold_pm20deg
+    duration_s: 45.0
+    position_setpoints:
+      - {label: pre_hold, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: yaw_plus_20deg, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 20.0, hold_s: 8.0}
+      - {label: yaw_zero_1, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: yaw_minus_20deg, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: -20.0, hold_s: 8.0}
+      - {label: recovery, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C06_velocity_north_doublet_0p5mps
+    maneuver_type: offboard_velocity_ned
+    duration_s: 42.0
+    velocity_setpoints:
+      - {label: pre_hold, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: north_forward, north_m_s: 0.5, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: stop_1, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 4.0}
+      - {label: north_backward, north_m_s: -0.5, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: recovery, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C07_velocity_east_doublet_0p5mps
+    maneuver_type: offboard_velocity_ned
+    duration_s: 42.0
+    velocity_setpoints:
+      - {label: pre_hold, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: east_right, north_m_s: 0.0, east_m_s: 0.5, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: stop_1, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 4.0}
+      - {label: east_left, north_m_s: 0.0, east_m_s: -0.5, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: recovery, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C08_vertical_velocity_doublet_0p25mps
+    maneuver_type: offboard_velocity_ned
+    duration_s: 42.0
+    velocity_setpoints:
+      - {label: pre_hold, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: climb_slow, north_m_s: 0.0, east_m_s: 0.0, down_m_s: -0.25, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: stop_1, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 4.0}
+      - {label: descend_slow, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.25, yaw_deg: 0.0, hold_s: 5.0}
+      - {label: recovery, north_m_s: 0.0, east_m_s: 0.0, down_m_s: 0.0, yaw_deg: 0.0, hold_s: 8.0}
+
+  - name: C09_mixed_position_sequence
+    duration_s: 55.0
+    position_setpoints:
+      - {label: pre_hold, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: north_east_up, north_m: 1.5, east_m: 1.5, down_m: -27.0, yaw_deg: 10.0, hold_s: 8.0}
+      - {label: center_mid, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 6.0}
+      - {label: south_west_down, north_m: -1.5, east_m: -1.5, down_m: -23.0, yaw_deg: -10.0, hold_s: 8.0}
+      - {label: east_yaw, north_m: 0.0, east_m: 2.0, down_m: -25.0, yaw_deg: 20.0, hold_s: 8.0}
+      - {label: recovery, north_m: 0.0, east_m: 0.0, down_m: -25.0, yaw_deg: 0.0, hold_s: 10.0}

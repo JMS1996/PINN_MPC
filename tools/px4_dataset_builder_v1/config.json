@@ -1,0 +1,43 @@
+{
+  "dataset_name": "px4_phase1_rate_dynamics_dataset_v1",
+  "source_run_glob": "~/px4_datasets/px4_phase1_standard_vtol_nominal_rate_dataset_v12_*",
+  "output_root": "~/px4_datasets/processed",
+  "filters": {
+    "min_relative_altitude_m": 10.0,
+    "max_relative_altitude_m": 35.0,
+    "max_abs_roll_deg": 25.0,
+    "max_abs_pitch_deg": 25.0,
+    "max_abs_body_rate_deg_s": 120.0,
+    "min_dt_s": 0.025,
+    "max_dt_s": 0.075,
+    "require_quality_ok_basic": true
+  },
+  "split": {
+    "seed": 7,
+    "train_fraction": 0.7,
+    "val_fraction": 0.15,
+    "test_fraction": 0.15,
+    "val_scenarios": ["N10_roll_yaw_coupled"],
+    "test_scenarios": ["N11_mixed_sequence"]
+  },
+  "columns": {
+    "state": [
+      "relative_altitude_m",
+      "vel_north_m_s",
+      "vel_east_m_s",
+      "vel_down_m_s",
+      "roll_deg",
+      "pitch_deg",
+      "yaw_deg",
+      "roll_rate_rad_s",
+      "pitch_rate_rad_s",
+      "yaw_rate_rad_s"
+    ],
+    "action": [
+      "ref_roll_rate_rad_s",
+      "ref_pitch_rate_rad_s",
+      "ref_yaw_rate_rad_s",
+      "ref_thrust"
+    ]
+  }
+}
